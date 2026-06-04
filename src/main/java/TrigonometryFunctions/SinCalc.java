@@ -7,6 +7,7 @@ public class SinCalc implements CalculationFunction {
     private final double eps;
     public SinCalc(double eps) { this.eps = eps; }
 
+    @Override
     public double calculate(double x) {
         x = x % (2 * Math.PI);
         if (x > Math.PI) {
