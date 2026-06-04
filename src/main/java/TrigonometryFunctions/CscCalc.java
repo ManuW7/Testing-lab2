@@ -15,7 +15,7 @@ public class CscCalc implements CalculationFunction {
     @Override
     public double calculate(double x){
         double sinValue = this.sin.calculate(x);
-        if (sinValue <= CLOSE_TO_ZERO ){
+        if (Math.abs(sinValue) <= CLOSE_TO_ZERO ){
             throw new IllegalArgumentException("sin(x) too close to zero");
         }
 

@@ -18,7 +18,7 @@ public class TanCalc implements CalculationFunction {
     @Override
     public double calculate(double x){
         double cosValue = this.cos.calculate(x);
-        if (cosValue <= CLOSE_TO_ZERO ){
+        if (Math.abs(cosValue) <= CLOSE_TO_ZERO ){
             throw new IllegalArgumentException("cos(x) too close to zero");
         }
 
