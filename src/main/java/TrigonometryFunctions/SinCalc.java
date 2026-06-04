@@ -10,11 +10,6 @@ public class SinCalc implements CalculationFunction {
     @Override
     public double calculate(double x) {
         x = x % (2 * Math.PI);
-        if (x > Math.PI) {
-            x -= 2 * Math.PI;
-        } else if (x < -Math.PI) {
-            x += 2 * Math.PI;
-        }
 
         double term = x;
         double sum = x;
