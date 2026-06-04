@@ -13,6 +13,25 @@ import java.util.Map;
 public final class StubModules {
     private static final double LOOKUP_EPSILON = 1.0E-6;
 
+    /*
+     * StubModules - это фабрика табличных заглушек.
+     *
+     * В тестах мы не хотим каждый раз вручную читать CSV и собирать Map<Double, Double>.
+     * Поэтому вызываем, например:
+     *
+     *     StubModules.sinStub()
+     *
+     * Этот вызов делает цепочку:
+     *
+     *     sinStub()
+     *       -> fromCsv("/lab2/stub/trig-functions.csv", "sin")
+     *       -> loadColumn(...)
+     *       -> new TableModule(...)
+     *
+     * В итоге возвращается объект CalculationFunction.
+     * Он ведет себя как обычная функция, но значения берет из таблицы.
+     */
+
     private static final double[] BASE_TRIG_FUNCTION_POINTS = {
             -Math.PI / 2.0 - 0.01,
             -Math.PI / 2.0 + 0.01,
@@ -101,6 +120,20 @@ public final class StubModules {
     private StubModules() {
     }
 
+    /*
+     * Методы ниже возвращают заглушки отдельных тригонометрических модулей.
+     *
+     * Все они читают один общий CSV:
+     *
+     *     src/main/resources/lab2/stub/trig-functions.csv
+     *
+     * В этом CSV несколько столбцов:
+     *
+     *     x;sin;cos;tan;cot;sec;csc
+     *
+     * Например sinStub() берет только столбец "sin",
+     * а tanStub() берет только столбец "tan".
+     */
     public static CalculationFunction sinStub() {
         return fromCsv("/lab2/stub/trig-functions.csv", "sin");
     }
@@ -125,6 +158,17 @@ public final class StubModules {
         return fromCsv("/lab2/stub/trig-functions.csv", "csc");
     }
 
+    /*
+     * Методы ниже возвращают заглушки отдельных логарифмических модулей.
+     *
+     * Все они читают CSV:
+     *
+     *     src/main/resources/lab2/stub/log-functions.csv
+     *
+     * Структура файла:
+     *
+     *     x;ln;log2;log5;log10
+     */
     public static CalculationFunction lnStub() {
         return fromCsv("/lab2/stub/log-functions.csv", "ln");
     }
@@ -141,6 +185,15 @@ public final class StubModules {
         return fromCsv("/lab2/stub/log-functions.csv", "log10");
     }
 
+    /*
+     * Заглушки веток и всей системы.
+     *
+     * trigBranchStub() читает уже готовые результаты всей тригонометрической ветки.
+     * logBranchStub() читает уже готовые результаты всей логарифмической ветки.
+     * systemStub() читает уже готовые результаты всей системы.
+     *
+     * Эти заглушки используются как эталон в интеграционных тестах.
+     */
     public static CalculationFunction trigBranchStub() {
         return fromCsv("/lab2/stub/trig-branch.csv", "trig_branch");
     }
@@ -153,10 +206,52 @@ public final class StubModules {
         return fromCsv("/lab2/stub/system.csv", "system");
     }
 
+    /*
+     * Универсальный метод создания заглушки из CSV.
+     *
+     * resourcePath - путь к CSV внутри src/main/resources.
+     * columnName - имя столбца, который нужно взять.
+     *
+     * Например:
+     *
+     *     fromCsv("/lab2/stub/log-functions.csv", "log10")
+     *
+     * прочитает из файла только пары:
+     *
+     *     x -> log10(x)
+     *
+     * и передаст их в TableModule.
+     */
     private static CalculationFunction fromCsv(String resourcePath, String columnName) {
         return new TableModule(loadColumn(resourcePath, columnName), LOOKUP_EPSILON);
     }
 
+    /*
+     * Читает один столбец из CSV и возвращает таблицу значений.
+     *
+     * Пример CSV:
+     *
+     *     x;ln;log2;log5;log10
+     *     0.5;-0.6931471805599453;-1.0;-0.43067655807339306;-0.3010299956639812
+     *
+     * Если вызвать:
+     *
+     *     loadColumn("/lab2/stub/log-functions.csv", "log2")
+     *
+     * результатом будет Map:
+     *
+     *     0.5 -> -1.0
+     *     ...
+     *
+     * Строки со значением "undefined" пропускаются.
+     * Это важно для точек, где функция математически не определена:
+     *
+     *     x = 0 для тригонометрической ветки;
+     *     x = 1 для логарифмической ветки.
+     *
+     * Если строка пропущена, TableModule потом не найдет эту точку
+     * и выбросит IllegalArgumentException.
+     */
     private static Map<Double, Double> loadColumn(String resourcePath, String columnName) {
         try (BufferedReader reader = openResource(resourcePath)) {
             String header = reader.readLine();
@@ -188,6 +283,15 @@ public final class StubModules {
     }
 
 
+    /*
+     * Ищет индекс нужного столбца в первой строке CSV.
+     *
+     * Например для заголовка:
+     *
+     *     x;sin;cos;tan
+     *
+     * columnName = "cos" вернет индекс 2.
+     */
     private static int findColumnIndex(String[] columns, String columnName, String resourcePath) {
         for (int index = 0; index < columns.length; index++) {
             if (columns[index].trim().equals(columnName)) {
@@ -197,6 +301,18 @@ public final class StubModules {
         throw new IllegalStateException("Column '" + columnName + "' is missing in " + resourcePath);
     }
 
+    /*
+     * Открывает CSV из classpath.
+     *
+     * В исходниках файл лежит в:
+     *
+     *     src/main/resources/lab2/stub/...
+     *
+     * При запуске Maven/IDEA копирует resources в classpath,
+     * поэтому код открывает файл как:
+     *
+     *     /lab2/stub/...
+     */
     private static BufferedReader openResource(String resourcePath) throws IOException {
         InputStream resource = StubModules.class.getResourceAsStream(resourcePath);
         if (resource == null) {

@@ -5,6 +5,15 @@ import Interfaces.CalculationFunction;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/*
+ * Табличная реализация CalculationFunction.
+ *
+ * Реальная функция считает значение по формуле.
+ * TableModule ничего не считает: он получает готовую таблицу x -> value
+ * и при calculate(x) возвращает значение из этой таблицы.
+ *
+ * Если нужная точка отсутствует, выбрасывается IllegalArgumentException.
+ */
 public class TableModule implements CalculationFunction {
     private static final double DEFAULT_LOOKUP_EPSILON = 1.0E-9;
 
@@ -48,6 +57,12 @@ public class TableModule implements CalculationFunction {
         Double bestValue = null;
         double bestDistance = Double.POSITIVE_INFINITY;
 
+        /*
+         * Ищем не строго равный double, а ближайший в пределах lookupEpsilon.
+         * Это нужно из-за погрешностей представления double:
+         * одно и то же математическое значение может прийти как -0.1
+         * или как -0.10000000000000002.
+         */
         for (Map.Entry<Double, Double> entry : table.entrySet()) {
             double distance = Math.abs(entry.getKey() - x);
             if (distance <= lookupEpsilon && distance < bestDistance) {
