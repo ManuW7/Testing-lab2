@@ -50,8 +50,28 @@ class TrigBaseFunctionTest {
     }
 
     @Test
+    void sinAtThreePiOverFourEqualsSqrtTwoOverTwo() {
+        assertEquals(SQRT2_OVER_2, sin.calculate(3.0 * FOURTH_PI), ASSERT_EPS);
+    }
+
+    @Test
     void sinAtNegativePiOverTwoEqualsMinusOne() {
         assertEquals(-1.0, sin.calculate(-HALF_PI), ASSERT_EPS);
+    }
+
+    @Test
+    void sinAtNegativePiEqualsZero() {
+        assertEquals(0.0, sin.calculate(-PI), ASSERT_EPS);
+    }
+
+    @Test
+    void sinAtNegativeThreePiOverFourEqualsMinusSqrtTwoOverTwo() {
+        assertEquals(-SQRT2_OVER_2, sin.calculate(-3.0 * FOURTH_PI), ASSERT_EPS);
+    }
+
+    @Test
+    void sinAtNegativeTwoPiEqualsZero() {
+        assertEquals(0.0, sin.calculate(-TWO_PI), ASSERT_EPS);
     }
 
     @Test
@@ -82,5 +102,27 @@ class TrigBaseFunctionTest {
     @Test
     void sinAtTwoPiEqualsZero() {
         assertEquals(0.0, sin.calculate(TWO_PI), ASSERT_EPS);
+    }
+
+    @Test
+    void sinAtSmallValueIsApproximatelyArgument() {
+        double x = 1.0E-10;
+
+        assertEquals(x, sin.calculate(x), ASSERT_EPS);
+    }
+
+    @Test
+    void sinAtLargePositiveMultipleOfPiEqualsZero() {
+        assertEquals(0.0, sin.calculate(1000.0 * PI), ASSERT_EPS);
+    }
+
+    @Test
+    void sinAtLargeNegativeMultipleOfPiEqualsZero() {
+        assertEquals(0.0, sin.calculate(-1000.0 * PI), ASSERT_EPS);
+    }
+
+    @Test
+    void sinIsPeriodicForLargeShift() {
+        assertEquals(sin.calculate(THIRD_PI), sin.calculate(THIRD_PI + 1000.0 * TWO_PI), ASSERT_EPS);
     }
 }

@@ -14,6 +14,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <mockito.version>5.12.0</mockito.version>
+        <jacoco.argLine></jacoco.argLine>
+        <test.jvm.args>-Dnet.bytebuddy.experimental=true -XX:+EnableDynamicAgentLoading</test.jvm.args>
     </properties>
 
     <dependencies>
@@ -38,7 +40,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <argLine>-Dnet.bytebuddy.experimental=true -XX:+EnableDynamicAgentLoading</argLine>
+                    <argLine>@{jacoco.argLine} ${test.jvm.args}</argLine>
                 </configuration>
             </plugin>
         </plugins>

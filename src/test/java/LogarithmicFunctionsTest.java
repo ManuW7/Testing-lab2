@@ -18,6 +18,7 @@ class LogarithmicFunctionsTest {
     private static final double LN_2 = 0.6931471805599453;
     private static final double LN_5 = 1.6094379124341003;
     private static final double LN_10 = 2.302585092994046;
+    private static final double LN_100 = 4.605170185988092;
 
     private CalculationFunction ln;
     private CalculationFunction log2;
@@ -35,6 +36,11 @@ class LogarithmicFunctionsTest {
     @Test
     void lnAtOneOverEEqualsMinusOne() {
         assertEquals(-1.0, ln.calculate(ONE_OVER_E), ASSERT_EPS);
+    }
+
+    @Test
+    void lnAtOneTenthEqualsMinusLnTen() {
+        assertEquals(-LN_10, ln.calculate(0.1), ASSERT_EPS);
     }
 
     @Test
@@ -60,6 +66,11 @@ class LogarithmicFunctionsTest {
     @Test
     void lnAtTenEqualsKnownConstant() {
         assertEquals(LN_10, ln.calculate(10.0), ASSERT_EPS);
+    }
+
+    @Test
+    void lnAtHundredEqualsKnownConstant() {
+        assertEquals(LN_100, ln.calculate(100.0), ASSERT_EPS);
     }
 
     @Test
@@ -98,6 +109,16 @@ class LogarithmicFunctionsTest {
     }
 
     @Test
+    void log2AtOneOverEightEqualsMinusThree() {
+        assertEquals(-3.0, log2.calculate(0.125), ASSERT_EPS);
+    }
+
+    @Test
+    void log2AtLargePowerEqualsTen() {
+        assertEquals(10.0, log2.calculate(1024.0), ASSERT_EPS);
+    }
+
+    @Test
     void log2ThrowsAtZero() {
         assertThrows(IllegalArgumentException.class, () -> log2.calculate(0.0));
     }
@@ -125,6 +146,16 @@ class LogarithmicFunctionsTest {
     @Test
     void log5AtOneFifthEqualsMinusOne() {
         assertEquals(-1.0, log5.calculate(0.2), ASSERT_EPS);
+    }
+
+    @Test
+    void log5AtOneOverTwentyFiveEqualsMinusTwo() {
+        assertEquals(-2.0, log5.calculate(0.04), ASSERT_EPS);
+    }
+
+    @Test
+    void log5AtHundredTwentyFiveEqualsThree() {
+        assertEquals(3.0, log5.calculate(125.0), ASSERT_EPS);
     }
 
     @Test
@@ -158,6 +189,16 @@ class LogarithmicFunctionsTest {
     }
 
     @Test
+    void log10AtOneHundredthEqualsMinusTwo() {
+        assertEquals(-2.0, log10.calculate(0.01), ASSERT_EPS);
+    }
+
+    @Test
+    void log10AtThousandEqualsThree() {
+        assertEquals(3.0, log10.calculate(1000.0), ASSERT_EPS);
+    }
+
+    @Test
     void log10ThrowsAtZero() {
         assertThrows(IllegalArgumentException.class, () -> log10.calculate(0.0));
     }
@@ -173,12 +214,27 @@ class LogarithmicFunctionsTest {
     }
 
     @Test
+    void lnReciprocalIdentityForTen() {
+        assertEquals(-ln.calculate(10.0), ln.calculate(0.1), ASSERT_EPS);
+    }
+
+    @Test
     void log2AdditionIdentityForTwoAndFour() {
         assertEquals(log2.calculate(8.0), log2.calculate(2.0) + log2.calculate(4.0), ASSERT_EPS);
     }
 
     @Test
+    void log5ReciprocalIdentityForFive() {
+        assertEquals(-log5.calculate(5.0), log5.calculate(0.2), ASSERT_EPS);
+    }
+
+    @Test
     void log10AdditionIdentityForTenAndTen() {
         assertEquals(log10.calculate(100.0), log10.calculate(10.0) + log10.calculate(10.0), ASSERT_EPS);
+    }
+
+    @Test
+    void log10ReciprocalIdentityForTen() {
+        assertEquals(-log10.calculate(10.0), log10.calculate(0.1), ASSERT_EPS);
     }
 }

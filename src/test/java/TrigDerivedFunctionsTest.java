@@ -17,6 +17,7 @@ class TrigDerivedFunctionsTest {
 
     private static final double PI = Math.PI;
     private static final double HALF_PI = Math.PI / 2.0;
+    private static final double TWO_PI = Math.PI * 2.0;
     private static final double SIXTH_PI = Math.PI / 6.0;
     private static final double FOURTH_PI = Math.PI / 4.0;
     private static final double THIRD_PI = Math.PI / 3.0;
@@ -74,6 +75,11 @@ class TrigDerivedFunctionsTest {
     }
 
     @Test
+    void cosAtNegativePiEqualsMinusOne() {
+        assertEquals(-1.0, cos.calculate(-PI), ASSERT_EPS);
+    }
+
+    @Test
     void cosIsEvenAtPiOverSix() {
         assertEquals(cos.calculate(SIXTH_PI), cos.calculate(-SIXTH_PI), ASSERT_EPS);
     }
@@ -86,6 +92,21 @@ class TrigDerivedFunctionsTest {
     @Test
     void cosIsEvenAtPiOverThree() {
         assertEquals(cos.calculate(THIRD_PI), cos.calculate(-THIRD_PI), ASSERT_EPS);
+    }
+
+    @Test
+    void cosIsPeriodicForPositiveShift() {
+        assertEquals(cos.calculate(THIRD_PI), cos.calculate(THIRD_PI + TWO_PI), ASSERT_EPS);
+    }
+
+    @Test
+    void cosIsPeriodicForLargeShift() {
+        assertEquals(cos.calculate(SIXTH_PI), cos.calculate(SIXTH_PI + 1000.0 * TWO_PI), ASSERT_EPS);
+    }
+
+    @Test
+    void tanAtZeroEqualsZero() {
+        assertEquals(0.0, tan.calculate(0.0), ASSERT_EPS);
     }
 
     @Test
@@ -114,8 +135,23 @@ class TrigDerivedFunctionsTest {
     }
 
     @Test
+    void tanIsPeriodicWithPiShift() {
+        assertEquals(tan.calculate(SIXTH_PI), tan.calculate(SIXTH_PI + PI), ASSERT_EPS);
+    }
+
+    @Test
+    void tanIsPeriodicForLargePiShift() {
+        assertEquals(tan.calculate(SIXTH_PI), tan.calculate(SIXTH_PI + 1000.0 * PI), ASSERT_EPS);
+    }
+
+    @Test
     void tanThrowsAtPiOverTwo() {
         assertThrows(IllegalArgumentException.class, () -> tan.calculate(HALF_PI));
+    }
+
+    @Test
+    void tanThrowsAtNegativePiOverTwo() {
+        assertThrows(IllegalArgumentException.class, () -> tan.calculate(-HALF_PI));
     }
 
     @Test
@@ -144,8 +180,23 @@ class TrigDerivedFunctionsTest {
     }
 
     @Test
+    void cotIsPeriodicWithPiShift() {
+        assertEquals(cot.calculate(THIRD_PI), cot.calculate(THIRD_PI + PI), ASSERT_EPS);
+    }
+
+    @Test
+    void cotIsPeriodicForLargePiShift() {
+        assertEquals(cot.calculate(THIRD_PI), cot.calculate(THIRD_PI + 1000.0 * PI), ASSERT_EPS);
+    }
+
+    @Test
     void cotThrowsAtZero() {
         assertThrows(IllegalArgumentException.class, () -> cot.calculate(0.0));
+    }
+
+    @Test
+    void cotThrowsAtPi() {
+        assertThrows(IllegalArgumentException.class, () -> cot.calculate(PI));
     }
 
     @Test
@@ -169,13 +220,33 @@ class TrigDerivedFunctionsTest {
     }
 
     @Test
+    void secAtPiEqualsMinusOne() {
+        assertEquals(-1.0, sec.calculate(PI), ASSERT_EPS);
+    }
+
+    @Test
     void secIsEvenAtPiOverSix() {
         assertEquals(sec.calculate(SIXTH_PI), sec.calculate(-SIXTH_PI), ASSERT_EPS);
     }
 
     @Test
+    void secIsPeriodicForPositiveShift() {
+        assertEquals(sec.calculate(THIRD_PI), sec.calculate(THIRD_PI + TWO_PI), ASSERT_EPS);
+    }
+
+    @Test
+    void secIsPeriodicForLargeShift() {
+        assertEquals(sec.calculate(SIXTH_PI), sec.calculate(SIXTH_PI + 1000.0 * TWO_PI), ASSERT_EPS);
+    }
+
+    @Test
     void secThrowsAtPiOverTwo() {
         assertThrows(IllegalArgumentException.class, () -> sec.calculate(HALF_PI));
+    }
+
+    @Test
+    void secThrowsAtNegativePiOverTwo() {
+        assertThrows(IllegalArgumentException.class, () -> sec.calculate(-HALF_PI));
     }
 
     @Test
@@ -194,12 +265,37 @@ class TrigDerivedFunctionsTest {
     }
 
     @Test
+    void cscAtPiOverTwoEqualsOne() {
+        assertEquals(1.0, csc.calculate(HALF_PI), ASSERT_EPS);
+    }
+
+    @Test
+    void cscAtNegativePiOverTwoEqualsMinusOne() {
+        assertEquals(-1.0, csc.calculate(-HALF_PI), ASSERT_EPS);
+    }
+
+    @Test
     void cscIsOddAtPiOverSix() {
         assertEquals(-csc.calculate(SIXTH_PI), csc.calculate(-SIXTH_PI), ASSERT_EPS);
     }
 
     @Test
+    void cscIsPeriodicForPositiveShift() {
+        assertEquals(csc.calculate(THIRD_PI), csc.calculate(THIRD_PI + TWO_PI), ASSERT_EPS);
+    }
+
+    @Test
+    void cscIsPeriodicForLargeShift() {
+        assertEquals(csc.calculate(SIXTH_PI), csc.calculate(SIXTH_PI + 1000.0 * TWO_PI), ASSERT_EPS);
+    }
+
+    @Test
     void cscThrowsAtZero() {
         assertThrows(IllegalArgumentException.class, () -> csc.calculate(0.0));
+    }
+
+    @Test
+    void cscThrowsAtPi() {
+        assertThrows(IllegalArgumentException.class, () -> csc.calculate(PI));
     }
 }
