@@ -7,7 +7,7 @@ public class Log2Calc implements CalculationFunction {
     private final double ln2;
     public Log2Calc(CalculationFunction ln) {
         this.ln = ln;
-        this.ln2 = ln.calculate(2); // константа
+        this.ln2 = ln.calculate(2);
     }
 
     @Override

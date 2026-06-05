@@ -2,7 +2,6 @@ package LogarithmicFunctions;
 
 import Interfaces.CalculationFunction;
 
-// Ln.java
 public class LnCalc implements CalculationFunction {
     private final double eps;
     public LnCalc(double eps) { this.eps = eps; }

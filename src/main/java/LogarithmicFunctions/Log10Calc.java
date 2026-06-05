@@ -7,7 +7,7 @@ public class Log10Calc implements CalculationFunction {
     private final double ln10;
     public Log10Calc(CalculationFunction ln) {
         this.ln = ln;
-        this.ln10 = ln.calculate(10); // константа
+        this.ln10 = ln.calculate(10);
     }
 
     @Override

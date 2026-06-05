@@ -1,4 +1,4 @@
-package StubGeneration;
+package CsvTools;
 
 import Interfaces.CalculationFunction;
 import LogarithmicFunctions.LnCalc;

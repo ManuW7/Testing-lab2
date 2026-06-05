@@ -1,4 +1,4 @@
-package StubGeneration;
+package CsvTools;
 
 import Interfaces.CalculationFunction;
 
@@ -113,7 +113,7 @@ public class CsvExporter {
     }
 
     private void writeLines(String outputPath, List<String> lines) throws IOException {
-        if (outputPath == null || outputPath.isBlank()) {
+        if (isBlank(outputPath)) {
             throw new IllegalArgumentException("outputPath must not be blank");
         }
 
@@ -143,12 +143,16 @@ public class CsvExporter {
     }
 
     private String validateHeaderName(String headerName) {
-        if (headerName == null || headerName.isBlank()) {
+        if (isBlank(headerName)) {
             throw new IllegalArgumentException("headerName must not be blank");
         }
         if (headerName.contains(";")) {
             throw new IllegalArgumentException("headerName must not contain semicolon");
         }
         return headerName;
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }
